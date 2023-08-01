@@ -6,8 +6,7 @@ const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = function(app) {
   //Connect to database
-  let uri =
-    'mongodb+srv://User1:' + process.env.PW + '@cluster0.ckgo56z.mongodb.net/stock_price_checker?retryWrites=true&w=majority';
+  let uri = 'mongodb+srv://User1:' + process.env.PW + '@cluster0.ckgo56z.mongodb.net/stock_price_checker?retryWrites=true&w=majority';
 
 
   mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
