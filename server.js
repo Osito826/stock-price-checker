@@ -25,6 +25,7 @@ app.use(helmet.contentSecurityPolicy({
     styleSrc : ["'self'"],
   }
 }))
+app.enable('trust proxy')
 
 //Index page (static HTML)
 app.route('/')

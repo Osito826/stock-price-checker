@@ -6,5 +6,16 @@ const server = require('../server');
 chai.use(chaiHttp);
 
 suite('Functional Tests', function() {
+  test('1 stock', function(done) {
+    chai.request(server)
+      .get('/api/stock-prices')
+      .query({stock: 'goog'})
+      .end(function(err, res) {
+        assert.Equals(res.body['stockData']['stock'], 'goog')
+        assert.NotNull(res.body['stockData']['price'])
+        assert.NotNull(res.body['stockData']['likes'])
+        done();
+    });
+  });
 
 });
