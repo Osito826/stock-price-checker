@@ -57,14 +57,14 @@ module.exports = function (app) {
     let likeStock = async (stockName, nextStep) => {
       const stockDocument = await Stock.findOne({ name: stockName });
       if (
-        !stockDocument ||
-        !stockDocument["ips"] ||
-        !stockDocument["ips"].includes(req.ip)
+        stockDocument &&
+        stockDocument["ips"] &&
+        stockDocument["ips"].includes(req.ip)
       ) {
+        return res.json("Error: Only 1 Like per IP Allowed");
+      } else {
         let documentUpdate = { $inc: { likes: 1 }, $push: { ips: req.ip } };
         await nextStep(stockName, documentUpdate, getPrice);
-      } else {
-        return res.send("Error: Only 1 Like per IP Allowed");
       }
     };
 
@@ -95,18 +95,18 @@ module.exports = function (app) {
     let stocks = [];
     /*Build Response for 2 Stocks*/
     let processTwoStocks = (stockDocument, nextStep) => {
-      let newStock = {}
-      newStock['stock'] = stockDocument['name']
-      newStock['price'] = stockDocument['price']
-      newStock['likes'] = stockDocument['likes']
-      stocks.push(newStock)
-      if(stocks.length === 2){
-        stocks[0]['rel_likes'] = stocks[0]['likes'] - stocks[1]['likes']
-        stocks[1]['rel_likes'] = stocks[1]['likes'] - stocks[0]['likes']
-        responseObject['stockData'] = stocks
-        nextStep()
-      }else{
-        return
+      let newStock = {};
+      newStock["stock"] = stockDocument["name"];
+      newStock["price"] = stockDocument["price"];
+      newStock["likes"] = stockDocument["likes"];
+      stocks.push(newStock);
+      if (stocks.length === 2) {
+        stocks[0]["rel_likes"] = stocks[0]["likes"] - stocks[1]["likes"];
+        stocks[1]["rel_likes"] = stocks[1]["likes"] - stocks[0]["likes"];
+        responseObject["stockData"] = stocks;
+        nextStep();
+      } else {
+        return;
       }
     };
 
