@@ -48,7 +48,16 @@ module.exports = function(app) {
 };
 
     /*Like Stock*/
-    let likeStock = (stockName, nextStep) => { };
+    let likeStock = (stockName, nextStep) => {
+      Stock.findOne({name: stockName}, (error, stockDocument) => {
+        if(!error && stockDocument && stockDocument['ips'] && stockDocument['ips'].includes(req.ip)){
+          return res.send('Error: Only 1 Like per IP Allowed')
+        }else{
+          let documentUpdate = {$inc: {likes: 1}, $push: {ips: req.ip}}
+          nextStep(stockName, documentUpdate, getPrice)
+        }
+      })
+    };
 
     /*Get Price*/
     let getPrice = (stockDocument, nextStep) => {
@@ -85,7 +94,6 @@ module.exports = function(app) {
       if(req.query.like && req.query.like === 'true'){
         likeStock(stockName, findOrUpdateStock)
       }else{
-        let documentUpdate = {}
         findOrUpdateStock(stockName, documentUpdate, getPrice)
       }
       
