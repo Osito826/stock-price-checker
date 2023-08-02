@@ -17,5 +17,10 @@ suite('Functional Tests', function() {
         done();
     });
   });
-
+  
+  test('1 stock with Like', function(done) {
+    chai.request(server)
+      .get('/api/stock-prices')
+      .query({stock: 'aapl', like: true})
+      .end
 });

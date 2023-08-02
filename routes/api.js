@@ -50,7 +50,7 @@ module.exports = function (app) {
     };
 
     /*Like Stock*/
-    let likeStock = async (stockName) => {
+    let likeStock = async (stockName, nextStep) => {
       const stockDocument = await Stock.findOne({ name: stockName });
       if (
         !stockDocument ||
