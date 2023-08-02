@@ -55,7 +55,8 @@ module.exports = function (app) {
 
     /*Like Stock*/
     let likeStock = async (stockName, nextStep) => {
-      const stockDocument = await Stock.findOne({ name: stockName });
+      try{
+        const stockDocument = await Stock.findOne({ name: stockName });
       if (
         stockDocument &&
         stockDocument["ips"] &&
@@ -66,6 +67,10 @@ module.exports = function (app) {
         let documentUpdate = { $inc: { likes: 1 }, $push: { ips: req.ip } };
         await nextStep(stockName, documentUpdate, getPrice);
       }
+      } catch (error) {
+        console.log(error);
+      }
+      
     };
 
     /*Get Price*/
