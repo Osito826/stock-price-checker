@@ -22,5 +22,22 @@ suite('Functional Tests', function() {
     chai.request(server)
       .get('/api/stock-prices')
       .query({stock: 'aapl', like: true})
-      .end
+      .end(function(err,res) {
+        assert.Equals(res.body['stockData']['stock'], 'aapl')
+        assert.Equals(res.body['stockData']['likes'], 1)
+        done();
+    });
+  });
+  
+  test('1 stock with Like again (ensure likes arent double counted)', function(done) {
+    chai.request(server)
+      .get('/api/stock-prices')
+      .query({stock: 'aapl', like: true})
+      .end(function(err,res) {
+        assert.Equals(res.body, 'Error: Only 1 Like per IP Allowed')
+        done();
+    });
+  });
+  
+
 });
