@@ -82,7 +82,13 @@ module.exports = function(app) {
       let stockName = req.query.stock;
 
       let documentUpdate = {};
-      findOrUpdateStock(stockName, documentUpdate, getPrice);
+      if(req.query.like && req.query.like === 'true'){
+        likeStock(stockName, findOrUpdateStock)
+      }else{
+        let documentUpdate = {}
+        findOrUpdateStock(stockName, documentUpdate, getPrice)
+      }
+      
     } else if (Array.isArray(req.query.stock)) {
       twoStocks = true;
       /*Stock 1*/
