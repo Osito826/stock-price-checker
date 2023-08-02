@@ -35,23 +35,23 @@ module.exports = function (app) {
 
     /*Find/Update Stock Document*/
     let findOrUpdateStock = async (stockName, documentUpdate, nextStep) => {
-  try {
-    const stockDocument = await Stock.findOneAndUpdate(
-      { name: stockName },
-      documentUpdate,
-      { new: true, upsert: true }
-    );
-    if (stockDocument) {
-      if (twoStocks === false) {
-        return await nextStep(stockDocument, processOneStock);
-      } else {
-        return await nextStep(stockDocument, processTwoStocks);
+      try {
+        const stockDocument = await Stock.findOneAndUpdate(
+          { name: stockName },
+          documentUpdate,
+          { new: true, upsert: true }
+        );
+        if (stockDocument) {
+          if (twoStocks === false) {
+            return await nextStep(stockDocument, processOneStock);
+          } else {
+            return await nextStep(stockDocument, processTwoStocks);
+          }
+        }
+      } catch (error) {
+        console.log(error);
       }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+    };
 
     /*Like Stock*/
     let likeStock = async (stockName, nextStep) => {
@@ -94,7 +94,21 @@ module.exports = function (app) {
 
     let stocks = [];
     /*Build Response for 2 Stocks*/
-    let processTwoStocks = (stockDocument, nextStep) => {};
+    let processTwoStocks = (stockDocument, nextStep) => {
+      let newStock = {}
+      newStock['stock'] = stockDocument['name']
+      newStock['price'] = stockDocument['price']
+      newStock['likes'] = stockDocument['likes']
+      stocks.push(newStock)
+      if(stocks.length === 2){
+        stocks[0]['rel_likes'] = stocks[0]['likes'] - stocks[1]['likes']
+        stocks[1]['rel_likes'] = stocks[1]['likes'] - stocks[0]['likes']
+        responseObject['stockData'] = stocks
+        nextStep()
+      }else{
+        return
+      }
+    };
 
     /*Process Input*/
     if (typeof req.query.stock === "string") {
@@ -110,21 +124,21 @@ module.exports = function (app) {
     } else if (Array.isArray(req.query.stock)) {
       twoStocks = true;
       /*Stock 1*/
-        let stockName = req.query.stock[0]
-        if(req.query.like && req.query.like === 'true'){
-          likeStock(stockName, findOrUpdateStock)
-        }else{
-          let documentUpdate = {}
-          findOrUpdateStock(stockName, documentUpdate, getPrice)
-        }
+      let stockName = req.query.stock[0];
+      if (req.query.like && req.query.like === "true") {
+        likeStock(stockName, findOrUpdateStock);
+      } else {
+        let documentUpdate = {};
+        findOrUpdateStock(stockName, documentUpdate, getPrice);
+      }
 
       /*Stock 2*/
-      stockName = req.query.stock[1]
-      if(req.query.like && req.query.like === 'true'){
-        likeStock(stockName, findOrUpdateStock)
-      }else{
-        let documentUpdate = {}
-        findOrUpdateStock(stockName, documentUpdate, getPrice)
+      stockName = req.query.stock[1];
+      if (req.query.like && req.query.like === "true") {
+        likeStock(stockName, findOrUpdateStock);
+      } else {
+        let documentUpdate = {};
+        findOrUpdateStock(stockName, documentUpdate, getPrice);
       }
     }
   });
