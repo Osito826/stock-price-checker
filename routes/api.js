@@ -60,7 +60,7 @@ module.exports = function (app) {
      console.log('Error: Only 1 Like per IP Allowed')
   } else {
     let documentUpdate = {$inc: {likes: 1}, $push: {ips: req.ip}};
-     await nextStep(stockName, documentUpdate, getPrice);
+      nextStep(stockName, documentUpdate, getPrice);
   }
      
 }
