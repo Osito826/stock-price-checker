@@ -85,10 +85,11 @@ module.exports = function (app) {
     /*Build Response for 1 Stock*/
     let processOneStock = (stockDocument, nextStep) => {
       responseObject["stockData"]["stock"] = stockDocument["name"];
-      responseObject["stockData"]["price"] = stockDocument["price"];
+      responseObject["stockData"]["price"] = +stockDocument["price"];
       responseObject["stockData"]["likes"] = stockDocument["likes"];
       nextStep();
     };
+    
 
     let stocks = [];
     /*Build Response for 2 Stocks*/
