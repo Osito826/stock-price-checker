@@ -58,8 +58,8 @@ module.exports = function (app) {
   const stockDocument = await Stock.findOne({name: stockName});
   if (stockDocument && stockDocument['ips'] && stockDocument['ips'].includes(req.ip)) {
      console.log('Error: Only 1 Like per IP Allowed')
-    /*let documentUpdate = {}
-    return await nextStep(stockName, documentUpdate, getPrice);*/
+    let documentUpdate = {}
+    return await nextStep(stockName, documentUpdate, getPrice);
   } else {
     let documentUpdate = {$inc: {likes: 1}, $push: {ips: req.ip}};
       return await nextStep(stockName, documentUpdate, getPrice);
