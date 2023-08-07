@@ -12,7 +12,7 @@ suite("Functional Tests", function () {
       .get("/api/stock-prices")
       .query({ stock: "goog" })
       .end(function (err, res) {
-        assert.Equals(res.body["stockData"]["stock"], "goog");
+        assert.equal(res.body["stockData"]["stock"], "goog");
         assert.NotNull(res.body["stockData"]["price"]);
         assert.NotNull(res.body["stockData"]["likes"]);
         done();
@@ -25,8 +25,8 @@ suite("Functional Tests", function () {
       .get("/api/stock-prices")
       .query({ stock: "aapl", like: true })
       .end(function (err, res) {
-        assert.Equals(res.body["stockData"]["stock"], "aapl");
-        assert.Equals(res.body["stockData"]["likes"], 1);
+        assert.equal(res.body["stockData"]["stock"], "aapl");
+        assert.equal(res.body["stockData"]["likes"], 1);
         done();
       });
   });
@@ -37,7 +37,7 @@ suite("Functional Tests", function () {
       .get("/api/stock-prices")
       .query({ stock: "aapl", like: true })
       .end(function (err, res) {
-        assert.Equals(res.body, "Error: Only 1 Like per IP Allowed");
+        assert.equal(res.body, "Error: Only 1 Like per IP Allowed");
         done();
       });
   });
