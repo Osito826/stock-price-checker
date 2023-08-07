@@ -13,8 +13,8 @@ suite("Functional Tests", function () {
       .query({ stock: "goog" })
       .end(function (err, res) {
         assert.equal(res.body["stockData"]["stock"], "goog");
-        assert.NotNull(res.body["stockData"]["price"]);
-        assert.NotNull(res.body["stockData"]["likes"]);
+        assert.isNotNull(res.body["stockData"]["price"]);
+        assert.isNotNull(res.body["stockData"]["likes"]);
         done();
       });
   });
