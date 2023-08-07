@@ -114,7 +114,7 @@ module.exports = function (app) {
 
       let documentUpdate = {};
       if (req.query.like && req.query.like === "true") {
-        likeStock(stockName, findOrUpdateStock, getPrice);
+        likeStock(stockName, findOrUpdateStock);
       } else {
         findOrUpdateStock(stockName, documentUpdate, getPrice);
       }
